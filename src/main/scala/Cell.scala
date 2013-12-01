@@ -1,4 +1,4 @@
-class Cell(people: List[Agent], val typ: CellType)
+class Cell(people: List[Person], val typ: CellType)
 
 sealed abstract class CellType
 

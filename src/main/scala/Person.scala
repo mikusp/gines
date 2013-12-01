@@ -5,7 +5,9 @@ case object Teenager extends Age
 case object Adult extends Age
 case object Elderly extends Age
 
-class Agent(age: Age, routine: Stream[Behaviour]) {
+trait Agent {
   val health: Health = Healthy
   val virusEncounters: Int = 0
 }
+
+class Person(age: Age, routine: Stream[Behaviour]) extends Agent
