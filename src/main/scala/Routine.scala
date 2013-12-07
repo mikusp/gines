@@ -8,24 +8,25 @@ object RoutineGenerator {
   def apply(age: Age, activities: Map[(Age, TimeChunk), List[CellType]],
     world: Map[(Int, Int), Cell]): Stream[Behaviour] = {
 
-    val getTypes = (tc: TimeChunk) => {
-      activities.getOrElse((age, tc), List[CellType]())
+    val possibleTypes = (for {
+      chunks <- TimeChunks.apply
+      types <- activities((age, chunks))
+    } yield types).distinct
+
+    val cells = for {
+      t <- possibleTypes
+      cells <- world if cells._2.typ == t
+    } yield cells._2
+
+    val celltypeToRandomCell = cells.groupBy(_.typ).map {
+      case (t, cs) => (t, cs.shuffle.head)
     }
 
-    val cell = (tc: TimeChunk) => {
-      (for {
-        types <- getTypes(tc)
-        cells <- world if cells._2.typ == types
-      } yield cells._2, tc)
-    }
+    val behaviours = TimeChunks.apply map ((tc: TimeChunk) => {
+      val celltype = activities((age, tc)).shuffle.head
 
-    val cells = List(cell(Morning), cell(Afternoon), cell(Evening),
-      cell(Night))
-
-    // ogromny błąd - może wylosować np. dwa różne domy na wieczór i na noc :D
-    // TODO
-
-    val behaviours = cells map { case (x, tc) => Behaviour(x.shuffle.head, tc) }
+      Behaviour(celltypeToRandomCell(celltype), tc)
+    })
 
     Stream.continually(behaviours).flatten
   }
