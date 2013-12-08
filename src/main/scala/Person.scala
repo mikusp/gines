@@ -10,4 +10,6 @@ trait Agent {
   val virusEncounters: Int = 0
 }
 
-class Person(age: Age, routine: Stream[Behaviour]) extends Agent
+class Person(val age: Age, val routine: Stream[Behaviour]) extends Agent {
+  def nextPhase: Person = new Person(age, routine.tail)
+}
