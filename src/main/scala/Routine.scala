@@ -31,13 +31,13 @@ object RoutineGenerator {
     Stream.continually(behaviours).flatten
   }
 
-  def swapFirst(b: Behaviour)(s: Stream[Behaviour]): Stream[Behaviour] = {
+  def swapFirst(b: Behaviour)(implicit s: Stream[Behaviour]): Stream[Behaviour] = {
     import collection.immutable.Stream.Empty
     def mapOnce[A](f: A => Option[A], xs: Stream[A]): Stream[A] = xs match {
       case Empty => Empty
       case a #:: as => f(a) match {
         case None => a #:: mapOnce(f, as)
-        case Some(s) => s #:: as
+        case Some(fa) => fa #:: as
       }
     }
 
