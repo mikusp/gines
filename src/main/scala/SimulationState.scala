@@ -1,9 +1,18 @@
-class SimulationState(
+case class SimulationState(
   day: Int,
   chunk: TimeChunk,
   agents: List[Person],
   world: Map[(Int, Int), Cell]) {
-  def step: SimulationState = this
+  def step: SimulationState = {
+    val people = agents map (_.nextPhase)
+    val nextChunk = chunk match {
+      case Morning => Afternoon
+      case Afternoon => Evening
+      case Evening => Night
+      case Night => Morning
+    }
+    SimulationState(day+1, nextChunk, people, world)
+  }
 }
 
 
