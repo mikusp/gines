@@ -11,7 +11,7 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.7.5",
   "org.slf4j" % "slf4j-simple" % "1.7.5",
   "org.scalatest" % "scalatest_2.10" % "2.0" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.10.1" % "test"
+  "org.scalacheck" %% "scalacheck" % "1.10.1"
 )
 
 addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.5.2")
