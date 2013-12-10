@@ -3,8 +3,8 @@ case class SimulationState(
   chunk: TimeChunk,
   agents: List[Person],
   world: Map[(Int, Int), Cell]) {
-  def step: SimulationState = {
-    val people = agents map (_.nextPhase)
+  def step(f: Person=>Person): SimulationState = {
+    val people = agents map (f(_).nextPhase)
     val nextChunk = chunk match {
       case Morning => Afternoon
       case Afternoon => Evening
@@ -16,7 +16,7 @@ case class SimulationState(
 }
 
 
-object World {
+object RandomWorldGenerator extends WorldGenerator {
   import RoutineGenerator._
 
   def apply(x: Int, y: Int): Map[(Int, Int), Cell] = {
@@ -34,4 +34,8 @@ object World {
 
     world.toMap
   }
+}
+
+trait WorldGenerator {
+  def apply(x: Int, y: Int): Map[(Int, Int), Cell]
 }

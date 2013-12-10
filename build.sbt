@@ -6,6 +6,10 @@ version := "0.1-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.0.4",
+  "org.scala-lang" % "scala-swing" % "2.10.3",
+  "org.clapper" % "grizzled-slf4j_2.10" % "1.0.1",
+  "org.slf4j" % "slf4j-api" % "1.7.5",
+  "org.slf4j" % "slf4j-simple" % "1.7.5",
   "org.scalatest" % "scalatest_2.10" % "2.0" % "test",
   "org.scalacheck" %% "scalacheck" % "1.10.1" % "test"
 )

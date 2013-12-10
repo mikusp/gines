@@ -9,7 +9,9 @@ class SimulationStateTest extends FunSuite {
     val people = List(new Person(Adult, beh))
     val world = Map[(Int, Int), Cell]( (0,0)->new Cell(Home) )
     val stepOne = SimulationState(1, Night, people, world)
-    val stepTwo = stepOne.step
+    val stepTwo = stepOne.step{
+      p => p
+    }
 
     assert(stepTwo.day == stepOne.day+1, "days should pass away")
     assert(stepTwo.chunk == Morning, "TimeChunk should move")

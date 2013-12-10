@@ -1,8 +1,6 @@
-import org.scalatest.FunSuite
+import org.scalatest.{BeforeAndAfter, FunSuite}
 
-class SimpleEngineTest extends FunSuite {
-
-  test("") {
-
+class SimpleEngineTest extends FunSuite with BeforeAndAfter {
+  test("days should pass") {
   }
 }

@@ -19,3 +19,7 @@ case class Incubating(i: Int) extends Health
 case class Ill(i: Int) extends Health
 case class Immune(i: Int) extends Health
 case class Vaccinated(i: Int) extends Health
+
+object Health {
+  implicit def healthToInt(h: Health): Int = 1
+}
