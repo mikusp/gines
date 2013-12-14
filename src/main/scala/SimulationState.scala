@@ -26,7 +26,7 @@ object RandomWorldGenerator extends WorldGenerator {
       for (j <- 1 to y) {
         // TODO
         // get all subclasses of CellType from the compiler
-        val t = List(School, Work, Home).shuffle.head
+        val t = List(School, Work, Home).randomElem
 
         world += (i, j) -> new Cell(t)
       }

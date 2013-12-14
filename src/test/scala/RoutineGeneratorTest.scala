@@ -45,7 +45,7 @@ object RoutineArbitrary {
   implicit def arbRoutine: Arbitrary[Stream[Behaviour]] = Arbitrary {
     val genWorld = for {
       dim <- Gen.choose(10, 200)
-    } yield World(dim, dim)
+    } yield RandomWorldGenerator(dim, dim)
 
     val genAge = Gen.oneOf(Child, Teenager, Adult, Elderly)
 
