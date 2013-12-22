@@ -1,6 +1,8 @@
+package simulation
+
+import engine.{Listener, EngineEvent, SimpleEngine}
 import grizzled.slf4j.Logger
 import java.awt.Color
-import javax.swing.border.LineBorder
 import scala.concurrent.Future
 import scala.swing._
 import scala.util.Random
@@ -23,7 +25,7 @@ object Gui extends SimpleSwingApplication {
     world
   )
   val virus = Virus(0.2, 0.4, 10, 15, 3, 7)
-  val simulation = new SimpleEngine(state, virus, random)
+  val simulation = SimpleEngine(1000, state, virus, random)
 
   val gridSize = new Dimension(50, 50)
 
@@ -42,7 +44,7 @@ object Gui extends SimpleSwingApplication {
           val condition = peopleIn.foldLeft(0) { (acc, p) =>
             acc + p.health
           }
-          logger.debug(s"Health condition of $condition")
+          logger.debug(s"simulation.Health condition of $condition")
           colorsMap.get(t.typ).map(c => g.setColor(c)) getOrElse (g.setColor(Color.BLACK))
           g.fillOval(x*shapeSize, y*shapeSize, shapeSize, shapeSize)
         }

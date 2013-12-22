@@ -10,8 +10,13 @@ libraryDependencies ++= Seq(
   "org.clapper" % "grizzled-slf4j_2.10" % "1.0.1",
   "org.slf4j" % "slf4j-api" % "1.7.5",
   "org.slf4j" % "slf4j-simple" % "1.7.5",
+  "com.typesafe" % "config" % "1.0.2",
+  "com.typesafe.akka" % "akka-actor_2.10" % "2.2.3",
+  "com.typesafe.akka" % "akka-zeromq_2.10" % "2.2.3",
   "org.scalatest" % "scalatest_2.10" % "2.0" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.10.1"
+  "org.scalacheck" %% "scalacheck" % "1.11.1",
+  "com.typesafe.akka" % "akka-testkit_2.10" % "2.2.3" % "test",
+  "org.scalamock" %% "scalamock-scalatest-support" % "3.0.1" % "test"
 )
 
 addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.5.2")

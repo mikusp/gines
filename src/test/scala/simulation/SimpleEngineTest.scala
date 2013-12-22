@@ -1,3 +1,5 @@
+package simulation
+
 import org.scalatest.{BeforeAndAfter, FunSuite}
 
 class SimpleEngineTest extends FunSuite with BeforeAndAfter {

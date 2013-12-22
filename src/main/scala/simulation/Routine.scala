@@ -1,4 +1,6 @@
-case class Behaviour(cell: Cell, tc: TimeChunk)
+package simulation
+
+
 
 object RoutineGenerator {
   import Conf.activities

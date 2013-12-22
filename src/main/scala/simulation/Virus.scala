@@ -1,3 +1,5 @@
+package simulation
+
 import scala.util.Random
 
 case class Virus(infectivity: Double, mortality: Double, incubationTime: Int,

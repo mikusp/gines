@@ -1,3 +1,5 @@
+package simulation
+
 import org.scalatest.FunSuite
 
 class SimulationStateTest extends FunSuite {
@@ -14,7 +16,7 @@ class SimulationStateTest extends FunSuite {
     }
 
     assert(stepTwo.day == stepOne.day+1, "days should pass away")
-    assert(stepTwo.chunk == Morning, "TimeChunk should move")
+    assert(stepTwo.chunk == Morning, "simulation.TimeChunk should move")
     stepTwo.agents.foreach{ p =>
       assert(p.routine.head.tc == stepTwo.chunk, "people should have same time chunk as simulation")
     }

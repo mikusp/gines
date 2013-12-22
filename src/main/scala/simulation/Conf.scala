@@ -1,3 +1,10 @@
+package simulation
+
+abstract class Conf {
+  def onStart(): Unit
+  def onStop(): Unit
+}
+
 object Conf {
   val activities: Map[(Age, TimeChunk), List[CellType]] = Map(
     (Child, Morning) -> List(School),

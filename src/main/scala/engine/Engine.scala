@@ -1,6 +1,12 @@
-import scala.util.Random
+package engine
 
-class SimpleEngine(s: SimulationState, val virus: Virus, rnd: Random) extends Observable {
+import scala.concurrent.Future
+import scala.util.Random
+import simulation.{Virus, SimulationState}
+import scala.concurrent.ExecutionContext.Implicits.global
+
+abstract class SimpleEngine(s: SimulationState, val virus: Virus, rnd: Random) extends Observable {
+  protected val simThread: Future[Unit]
   protected var state: SimulationState = s
   protected implicit val random: Random = rnd
 
@@ -8,6 +14,16 @@ class SimpleEngine(s: SimulationState, val virus: Virus, rnd: Random) extends Ob
     state = state.step(virus.apply)
     fireEvent(EngineEvent())
     Thread.sleep(1000)
+  }
+}
+
+object SimpleEngine {
+  def apply(days: Int, s: SimulationState, virus: Virus, rnd: Random): SimpleEngine = {
+    new SimpleEngine(s, virus, rnd) {
+      protected val simThread: Future[Unit] = Future{
+        loop(days)
+      }
+    }
   }
 }
 

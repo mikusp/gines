@@ -1,3 +1,7 @@
+package simulation
+
+import RoutineGenerator.RandomList
+
 case class SimulationState(
   day: Int,
   chunk: TimeChunk,
@@ -15,9 +19,7 @@ case class SimulationState(
   }
 }
 
-
 object RandomWorldGenerator extends WorldGenerator {
-  import RoutineGenerator._
 
   def apply(x: Int, y: Int): Map[(Int, Int), Cell] = {
     val world = collection.mutable.Map[(Int, Int), Cell]()
