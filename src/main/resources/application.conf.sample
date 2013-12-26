@@ -2,3 +2,4 @@ simulation {
     host=127.0.0.1
     port=22322
 }
+simulation.admin.port=22323

@@ -1,12 +1,30 @@
 package akka
 
-import akka.actor.Actor
-import akka.zeromq.ZMQMessage
+import akka.actor.{ActorLogging, ActorRef, Actor}
 
-class SimulationActor extends Actor {
-  def receive: Actor.Receive = {
-    case m: ZMQMessage if m.frame(0).utf8String == GinesCommand("start").toString => ???
-    case m: ZMQMessage if m.frame(0).utf8String == GinesCommand("stop").toString => ???
-    case m: ZMQMessage if m.frame(0).utf8String == GinesCommand("pause").toString => ???
+class SimulationActor(val publisher: ActorRef) extends Actor with ActorLogging {
+  def receive = {
+    case StartSimulation() => {
+      log.debug("Starting")
+      self ! Infect
+    } //TODO: start with initial parameters
+    case PauseSimulation => ???
+    case StopSimulation => ???
+
+    //TODO: add more steps to have more control
+    case Infect => {
+      self ! NextDay
+    }
+    case NextDay => {
+      publisher ! Publish() //TODO: publish state to all listeners
+      self ! Infect
+    }
   }
 }
+
+case object Infect
+case object NextDay
+
+case class StartSimulation()
+case object StopSimulation
+case object PauseSimulation

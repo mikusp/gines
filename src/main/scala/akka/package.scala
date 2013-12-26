@@ -1,16 +1,15 @@
-import akka.actor.ActorSystem
+import akka.GinesActors.system
+import akka.actor.{Props}
 import com.typesafe.config.ConfigFactory
 
 package object akka {
-  val system = ActorSystem("gines")
-
-  val conf = ConfigFactory.load()
+  val conf = ConfigFactory.load("application")
 
   val host = conf.getString("simulation.host")
 
   val port = conf.getString("simulation.port")
 
-  case class GinesCommand(cmd: String) {
-    override def toString: String = "gines." + cmd
-  }
+  val adminPort= conf.getString("simulation.admin.port")
+
+  case class Publish()
 }
