@@ -10,7 +10,7 @@ class PublisherActor extends Actor with ActorLogging {
 
   def receive: Actor.Receive = {
     case Publish() => {
-      socket ! ZMQMessage(ByteString("Message from server"))
+      socket ! ZMQMessage(ByteString("gines"), ByteString("hello world!"))
     }
   }
 }

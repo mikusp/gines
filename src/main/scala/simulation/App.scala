@@ -8,6 +8,6 @@ object App {
     val simulation = GinesActors.makeSimulation
     simulation ! StartSimulation()
 
-    (1 to 1000) map(x => Thread.sleep(1000))
+    Thread.sleep(1000*60)
   }
 }
