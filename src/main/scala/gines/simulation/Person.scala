@@ -1,4 +1,4 @@
-package simulation
+package gines.simulation
 
 class Person(val age: Age, val routine: Stream[Behaviour]) extends Agent {
   def nextPhase: Person = new Person(age, routine.tail)

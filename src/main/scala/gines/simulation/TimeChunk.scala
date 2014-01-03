@@ -1,4 +1,4 @@
-package simulation
+package gines.simulation
 
 sealed abstract class TimeChunk
 

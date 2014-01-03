@@ -1,4 +1,4 @@
-package simulation
+package gines.simulation
 
 abstract class Conf {
   def onStart(): Unit

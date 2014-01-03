@@ -1,4 +1,4 @@
-package akka
+package gines.akka
 
 import akka.actor.{ActorRef, Props, ActorSystem}
 

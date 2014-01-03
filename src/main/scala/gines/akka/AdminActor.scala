@@ -1,6 +1,6 @@
-package akka
+package gines.akka
 
-import akka.GinesActors.system
+import gines.akka.GinesActors.system
 import akka.actor.{ActorLogging, Actor}
 import akka.zeromq._
 import akka.zeromq.Bind

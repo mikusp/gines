@@ -1,7 +1,7 @@
-package akka
+package gines.akka
 
 import akka.actor.{ActorLogging, ActorRef, Actor}
-import simulation.{RandomWorldGenerator, Person, Morning, SimulationState}
+import gines.simulation.{RandomWorldGenerator, Person, Morning, SimulationState}
 
 class SimulationActor(val publisher: ActorRef) extends Actor with ActorLogging {
   def receive = {

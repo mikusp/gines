@@ -1,5 +1,5 @@
-import akka.GinesActors.system
-import akka.actor.{Props}
+package gines
+
 import com.typesafe.config.ConfigFactory
 import simulation.SimulationState
 

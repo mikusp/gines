@@ -1,6 +1,6 @@
 package simulation
 
-import org.scalacheck._
+
 
 /*
 object RoutineSpecification extends Properties("Routine") {

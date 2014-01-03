@@ -1,6 +1,6 @@
 package gines
 
-import akka.{StartSimulation, GinesActors}
+import gines.akka.{StartSimulation, GinesActors}
 
 object App {
   def main(args: Array[String]): Unit = {

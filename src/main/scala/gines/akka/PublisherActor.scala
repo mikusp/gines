@@ -1,4 +1,4 @@
-package akka
+package gines.akka
 
 import akka.zeromq._
 import akka.actor.{ActorLogging, Actor}

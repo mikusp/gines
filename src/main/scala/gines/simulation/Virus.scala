@@ -1,4 +1,4 @@
-package simulation
+package gines.simulation
 
 import scala.util.Random
 
