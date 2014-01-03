@@ -10,7 +10,7 @@ class PersonTest extends FunSuite {
     val p = new Person(Adult, Stream(night, morning))
 
     val nextPhase = p.nextPhase.routine.head
-    assert(nextPhase.cell.typ == Home, "simulation.Person should be at home")
+    assert(nextPhase.cell.typ == Home, "gines.simulation.Person should be at home")
     assert(nextPhase.tc == Morning, "It should be morning")
   }
 }

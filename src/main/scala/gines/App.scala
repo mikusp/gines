@@ -1,4 +1,4 @@
-package simulation
+package gines
 
 import akka.{StartSimulation, GinesActors}
 
@@ -8,6 +8,6 @@ object App {
     val simulation = GinesActors.makeSimulation
     simulation ! StartSimulation()
 
-    Thread.sleep(1000*60)
+    Thread.sleep(1000*60*60)
   }
 }

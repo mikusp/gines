@@ -1,6 +1,7 @@
 package akka
 
 import akka.actor.{ActorLogging, ActorRef, Actor}
+import simulation.{RandomWorldGenerator, Person, Morning, SimulationState}
 
 class SimulationActor(val publisher: ActorRef) extends Actor with ActorLogging {
   def receive = {
@@ -16,7 +17,9 @@ class SimulationActor(val publisher: ActorRef) extends Actor with ActorLogging {
       self ! NextDay
     }
     case NextDay => {
-      publisher ! Publish() //TODO: publish state to all listeners
+      val world = RandomWorldGenerator(10, 10)
+      val tmpState = SimulationState(0, Morning, List.empty[Person], world)
+      publisher ! Publish(tmpState) //TODO: publish state to all listeners
       self ! Infect
     }
   }
