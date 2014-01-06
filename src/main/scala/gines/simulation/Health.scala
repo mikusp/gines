@@ -27,5 +27,5 @@ case class Immune(i: Int) extends Health
 case class Vaccinated(i: Int) extends Health
 
 object Health {
-  implicit def healthToInt(h: Health): Int = 1
+  implicit def healthToInt(h: Health): Int = 1 //TODO: Fixme!
 }
