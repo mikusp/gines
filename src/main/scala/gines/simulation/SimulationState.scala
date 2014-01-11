@@ -30,8 +30,9 @@ case class SimulationState(
 
     lazy val outsideWorld = world.map(_.swap)
 
-    lazy val healthyPeopleInSameCellAsIll = ill map (i => healthy filter (_.routine.head.cell == i.routine.head.cell)) flatten
-    lazy val potentiallyInfectedPeople = healthyPeopleInSameCellAsIll map (f(_))
+    lazy val healthyPeopleInAdjacentCells = (ill map (i => healthy filter (j =>
+      worldAdjacent(outsideWorld, j.routine.head.cell, i.routine.head.cell))) flatten) distinct
+    lazy val potentiallyInfectedPeople = healthyPeopleInAdjacentCells map (f(_))
     lazy val allPeople = (potentiallyInfectedPeople ++ ill ++ immune) map (_.nextPhase)
     val nextChunk = chunk match {
       case Morning => Afternoon
