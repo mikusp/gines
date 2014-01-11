@@ -14,7 +14,8 @@ object App extends GinesLogging {
     val initialState = SimulationState(0, Morning, population, world)
     val virus = Virus(0.05, 50)
 
-    val simulation = GinesActors.makeSimulation(initialState, virus)
+    val simulationMaker = GinesActors.makeSimulation("localhost")_
+    val simulation = simulationMaker(initialState, virus)
 
     simulation ! StartSimulation()
 

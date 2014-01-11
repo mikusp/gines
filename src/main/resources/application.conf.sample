@@ -1,5 +1,16 @@
-gines.simulation {
-    host=127.0.0.1
-    port=22322
+akka {
+  # Log level used by the configured loggers (see "loggers") as soon
+  # as they have been started; before that, see "stdout-loglevel"
+  # Options: OFF, ERROR, WARNING, INFO, DEBUG
+  loglevel = "DEBUG"
+
+  # Log level for the very basic logger activated during AkkaApplication startup
+  # Options: OFF, ERROR, WARNING, INFO, DEBUG
+  stdout-loglevel = "DEBUG"
 }
-gines.simulation.admin.port=22323
+
+gines.simulation {
+    host="127.0.0.1"
+    port=22322
+    admin.port=22323
+}

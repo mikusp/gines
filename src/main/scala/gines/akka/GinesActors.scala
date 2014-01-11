@@ -8,6 +8,7 @@ object GinesActors {
 
   implicit val publisher = system.actorOf(Props[PublisherActor], name="Publisher")
 
-  def makeSimulation(initialState: SimulationState, virus: Virus)(implicit pub: ActorRef) =
-    system.actorOf(Props(classOf[SimulationActor], initialState, virus, pub))
+  def makeSimulation(name: String)(initialState: SimulationState, virus: Virus)(implicit pub: ActorRef) = {
+    system.actorOf(Props(classOf[SimulationActor], initialState, virus, pub), name)
+  }
 }
