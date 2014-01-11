@@ -12,7 +12,7 @@ object App extends GinesLogging {
     val population = Foo.populateWorld(world)
     log.debug(s"Generated population size is: ${population.length}")
     val initialState = SimulationState(0, Morning, population, world)
-    val virus = new Virus(0.2, 0.01, 10, 5, 3, 15)
+    val virus = Virus(0.05, 50)
 
     val simulation = GinesActors.makeSimulation(initialState, virus)
 

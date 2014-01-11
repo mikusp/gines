@@ -1,7 +1,9 @@
 package gines.simulation
 
-class Person(val age: Age, val routine: Stream[Behaviour]) extends Agent {
-  def nextPhase: Person = new Person(age, routine.tail)
+case class Person(age: Age, routine: Stream[Behaviour],
+  override val health: Health = Healthy, override val
+  virusEncounters: Int = 0) extends Agent {
+  def nextPhase: Person = Person(age, routine.tail, health.advance, virusEncounters)
 }
 
 sealed abstract class Age

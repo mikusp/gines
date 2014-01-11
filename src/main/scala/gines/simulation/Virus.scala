@@ -2,15 +2,19 @@ package gines.simulation
 
 import scala.util.Random
 
-case class Virus(infectivity: Double, mortality: Double, incubationTime: Int,
-  meanIllnessTime: Int, infectiousnessPeriodBeginning: Int,
-  infectiousnessPeriodEnd: Int) {
+case class Virus(infectivity: Double, probCurveFactor: Int) {
     require(infectivity > 0 && infectivity < 1)
-    require(mortality > 0 && mortality < 1)
 
-  def apply(prs: Person)(implicit rnd: Random): Person = {
-    prs
+  def apply(prs: Person)(implicit rnd: Random): Person = prs.health match {
+    case Healthy => {
+      val virusEnc = prs.virusEncounters + 1
+      val infectionProb = infectivity * math.exp(virusEnc / probCurveFactor)
+
+      val h = if (math.random < infectionProb) Ill(1) else Healthy
+
+      prs.copy(health = h, virusEncounters = virusEnc)
+    }
+
+    case _ => prs
   }
 }
-
-// what should be the unit of these ints? days, chunks, ...?
