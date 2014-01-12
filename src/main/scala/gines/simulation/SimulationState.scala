@@ -8,6 +8,8 @@ case class SimulationState(
   agents: List[Person],
   world: Map[(Int, Int), Cell]) {
   def step(f: Person=>Person): SimulationState = {
+    lazy val numberOfAgents = agents.length
+
     lazy val (ill, rest) = agents partition (_.health match {
       case Ill(_) => true
       case _ => false
@@ -17,6 +19,8 @@ case class SimulationState(
       case Healthy => true
       case _ => false
     })
+
+    assert(ill.length + healthy.length + immune.length == numberOfAgents)
 
     def worldAdjacent(w: Map[Cell, (Int, Int)], c1: Cell, c2: Cell): Boolean = {
       if (c1.typ != c2.typ)
@@ -31,15 +35,18 @@ case class SimulationState(
     lazy val outsideWorld = world.map(_.swap)
 
     lazy val healthyPeopleInAdjacentCells = (ill map (i => healthy filter (j =>
-      worldAdjacent(outsideWorld, j.routine.head.cell, i.routine.head.cell))) flatten) distinct
-    lazy val potentiallyInfectedPeople = healthyPeopleInAdjacentCells map (f(_))
-    lazy val allPeople = (potentiallyInfectedPeople ++ ill ++ immune) map (_.nextPhase)
+      worldAdjacent(outsideWorld, j.routine.head.cell, i.routine.head.cell))) flatten).toSet
+    lazy val restOfHealthyPeople = healthy.filterNot(healthyPeopleInAdjacentCells)
+    lazy val potentiallyInfectedPeople = healthyPeopleInAdjacentCells map f
+    lazy val allPeople = (potentiallyInfectedPeople.toList ++ restOfHealthyPeople ++ ill ++ immune) map (_.nextPhase)
     val nextChunk = chunk match {
       case Morning => Afternoon
       case Afternoon => Evening
       case Evening => Night
       case Night => Morning
     }
+
+    assert(allPeople.length == numberOfAgents, "We are messing with agents!!!")
 
     SimulationState(if (nextChunk == Morning) day + 1 else day, nextChunk, allPeople, world)
   }
