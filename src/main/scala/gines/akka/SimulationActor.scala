@@ -5,6 +5,7 @@ import gines.simulation._
 import gines.simulation.SimulationState
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+
 class SimulationActor(var state: SimulationState, val virus: Virus, val publisher: ActorRef) extends Actor with ActorLogging {
   private var started = 0L
   private val sleepDuration = 1000

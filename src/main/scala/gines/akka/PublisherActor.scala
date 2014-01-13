@@ -9,7 +9,7 @@ import gines.simulation.Morning
 
 class PublisherActor extends Actor with ActorLogging {
   val socket = ZeroMQExtension(context.system).newSocket(
-    SocketType.Pub, Bind(s"tcp://$host:$port"))
+    SocketType.Pub, Bind(s"tcp://*:$port"))
 
   def receive = {
     case Connecting => () //TODO: send world

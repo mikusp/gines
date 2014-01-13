@@ -1,6 +1,7 @@
 package gines
 
-import gines.akka.{StartSimulation, GinesActors}
+import _root_.akka.actor.Props
+import gines.akka.{AdminActor, StartSimulation, GinesActors}
 import gines.simulation.{Virus, Morning, SimulationState, Foo}
 import gines.utils.GinesLogging
 
@@ -13,6 +14,8 @@ object App extends GinesLogging {
     log.debug(s"Generated population size is: ${population.length}")
     val initialState = SimulationState(0, Morning, population, world)
     val virus = Virus(0.05, 50)
+
+    GinesActors.system.actorOf(Props[AdminActor], name="admin")
 
     val simulationMaker = GinesActors.makeSimulation("localhost")_
     val simulation = simulationMaker(initialState, virus)
