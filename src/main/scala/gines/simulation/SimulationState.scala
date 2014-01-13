@@ -5,7 +5,7 @@ import RoutineGenerator.RandomList
 case class SimulationState(
   day: Int,
   chunk: TimeChunk,
-  agents: List[Person],
+  agents: Vector[Person],
   world: Map[(Int, Int), Cell]) {
   def step(f: Person=>Person): SimulationState = {
     lazy val numberOfAgents = agents.length
@@ -38,7 +38,7 @@ case class SimulationState(
       worldAdjacent(outsideWorld, j.routine.head.cell, i.routine.head.cell))) flatten).toSet
     lazy val restOfHealthyPeople = healthy.filterNot(healthyPeopleInAdjacentCells)
     lazy val potentiallyInfectedPeople = healthyPeopleInAdjacentCells map f
-    lazy val allPeople = (potentiallyInfectedPeople.toList ++ restOfHealthyPeople ++ ill ++ immune) map (_.nextPhase)
+    lazy val allPeople = (potentiallyInfectedPeople.toVector ++ restOfHealthyPeople ++ ill ++ immune) map (_.nextPhase)
     val nextChunk = chunk match {
       case Morning => Afternoon
       case Afternoon => Evening

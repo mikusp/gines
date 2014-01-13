@@ -57,18 +57,18 @@ object Foo {
     world.toMap
   }
 
-  def populateWorld(world: Map[(Int, Int), Cell]): List[Person] =
-    world.filter{ case (_, c) => c.typ == Home }.foldLeft(List[Person]())((list, home) => home match {
+  def populateWorld(world: Map[(Int, Int), Cell]): Vector[Person] =
+    world.filter{ case (_, c) => c.typ == Home }.foldLeft(Vector[Person]())((list, home) => home match {
       case (_, c) => {
         val size = householdSizeGen.sample.get
 
         val routineF = (a: Age) => RoutineGenerator(a, c, world)
         val firstPersonAge = singleAgeGen.sample.get
 
-        val newPeople = new Person(firstPersonAge, routineF(firstPersonAge)) ::
+        val newPeople = new Person(firstPersonAge, routineF(firstPersonAge)) +:
         ((2 to size).map(_ => ageGen.sample.get) map {
             age => new Person(age, routineF(age))
-        }).to[List]
+        }).to[Vector]
 
         newPeople ++ list
       }
