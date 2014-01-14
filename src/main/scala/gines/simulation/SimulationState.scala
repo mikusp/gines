@@ -1,6 +1,7 @@
 package gines.simulation
 
 import RoutineGenerator.RandomList
+import scala.collection.{mutable, immutable}
 
 case class SimulationState(
   day: Int,
@@ -20,7 +21,7 @@ case class SimulationState(
       case _ => false
     })
 
-    assert(ill.length + healthy.length + immune.length == numberOfAgents)
+    //assert(ill.length + healthy.length + immune.length == numberOfAgents)
 
     def worldAdjacent(w: Map[Cell, (Int, Int)], c1: Cell, c2: Cell): Boolean = {
       if (c1.typ != c2.typ)
@@ -34,9 +35,12 @@ case class SimulationState(
 
     val outsideWorld = world.map(_.swap)
 
-    val healthyPeopleInAdjacentCells = (ill map (i => healthy filter (j =>
-      worldAdjacent(outsideWorld, j.routine.head.cell, i.routine.head.cell))) flatten).toSet
-    val restOfHealthyPeople = healthy.filterNot(healthyPeopleInAdjacentCells)
+//    val healthyPeopleInAdjacentCells = (ill flatMap (i => healthy filter (j =>
+//      worldAdjacent(outsideWorld, j.routine.head.cell, i.routine.head.cell)))).toSet
+    val healthyPeopleInAdjacentCells = (ill flatMap (i => healthy filter (j =>
+      worldAdjacent(outsideWorld, i.routine.head.cell, j.routine.head.cell)))).distinct
+//    println(healthyPeopleInAdjacentCells.size)
+    val restOfHealthyPeople = healthy.filterNot(healthyPeopleInAdjacentCells.contains)
     val potentiallyInfectedPeople = healthyPeopleInAdjacentCells map f
     val allPeople = (potentiallyInfectedPeople.toVector ++ restOfHealthyPeople ++ ill ++ immune) map (_.nextPhase)
     val nextChunk = chunk match {
@@ -46,9 +50,9 @@ case class SimulationState(
       case Night => Morning
     }
 
-    assert(allPeople.length == numberOfAgents, "We are messing with agents!!!")
+//    assert(allPeople.length == numberOfAgents, "We are messing with agents!!!")
 
-    SimulationState(if (nextChunk == Morning) day + 1 else day, nextChunk, allPeople, world)
+    SimulationState(if (nextChunk == Morning) day + 1 else day, nextChunk, agents, world)
   }
 }
 
