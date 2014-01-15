@@ -1,10 +1,11 @@
 package gines.akka
 
 import gines.akka.GinesActors.system
-import akka.actor.{ActorSystem, Props, ActorLogging, Actor}
+import akka.actor.{Props, ActorLogging, Actor}
 import akka.zeromq._
 import akka.zeromq.Bind
 import akka.zeromq.Listener
+import akka.util.ByteString
 
 class AdminActor extends Actor with ActorLogging {
   val adminSocket = ZeroMQExtension(system).newSocket(SocketType.Rep, Listener(self), Bind(s"tcp://*:$adminPort"))
@@ -12,6 +13,7 @@ class AdminActor extends Actor with ActorLogging {
   def receive: Actor.Receive = {
     case Connecting => log.debug("Connecting")
     case m: ZMQMessage => {
+      sender ! ZMQMessage(ByteString("gines"), ByteString("{\"status:\": \"OK\"}"))
       log.debug("Received message")
       log.debug(s"Message: ${m.frame(1).utf8String}")
     }

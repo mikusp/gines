@@ -5,7 +5,6 @@ import akka.actor.{ActorLogging, Actor}
 import akka.util.ByteString
 import akka.zeromq.Bind
 import com.codahale.jerkson.Json
-import gines.simulation.Morning
 
 class PublisherActor extends Actor with ActorLogging {
   val socket = ZeroMQExtension(context.system).newSocket(

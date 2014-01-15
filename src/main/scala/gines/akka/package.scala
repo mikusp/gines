@@ -1,10 +1,12 @@
 package gines
 
 import com.typesafe.config.ConfigFactory
-import gines.simulation.{CellType, TimeChunk, SimulationState}
+import gines.simulation.{CellType, TimeChunk}
 
 package object akka {
   val conf = ConfigFactory.load()
+
+  val akkaLogLevel = conf.getString("akka.loglevel")
 
   val host = conf.getString("gines.simulation.host")
 
