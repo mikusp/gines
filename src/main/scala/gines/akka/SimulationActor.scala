@@ -1,5 +1,6 @@
 package gines.akka
 
+import com.typesafe.config.ConfigFactory
 import akka.actor.{ActorLogging, ActorRef, Actor}
 import gines.simulation._
 import gines.simulation.SimulationState
@@ -9,11 +10,14 @@ class SimulationActor(var state: SimulationState, val virus: Virus, val publishe
   private var started = 0L
   private val sleepDuration = 1000
 
+  lazy val conf = ConfigFactory.load
+
   def receive = {
     case StartSimulation() => {
       log.debug("Starting")
-      val newAgents = state.agents.take(5).map(_.copy(health = Ill(1)))
-      state = state.copy(agents = newAgents ++ state.agents.drop(5))
+      val illAgentsNum = conf.getInt("simulation.params.agents.initialInfected")
+      val newAgents = state.agents.take(illAgentsNum).map(_.copy(health = Ill(1)))
+      state = state.copy(agents = newAgents ++ state.agents.drop(illAgentsNum))
       self ! Infect //TODO: start with initial parameters
     }
     case PauseSimulation => ???
@@ -28,25 +32,30 @@ class SimulationActor(var state: SimulationState, val virus: Virus, val publishe
     case NextDay => {
       val world = state.world.map {
         case (key, value) => {
-          val peopleOfCell = state.agents.filter(p => p.routine.head.cell == value)
+          val peopleOfCell = state.agents.view.filter(p => p.routine.head.cell == value)
 
-          val notHealthyPeople = peopleOfCell.filter(p => p.health != Healthy)
+          val notHealthyPeople = peopleOfCell.view.filter(p => p.health != Healthy)
           val condition = if(peopleOfCell.length != 0) (notHealthyPeople.length.toDouble/peopleOfCell.length) else 0.0
 
           (key, Cell(peopleOfCell.length,condition, value.typ))
         }
       }
 
-      lazy val agents = state.agents.length
+      val agents = state.agents.length
 
-      lazy val ill = (state.agents count (_.health match {
+      val ill = state.agents count (_.health match {
         case Ill(_) => true
         case _ => false
-      })) / agents
-      lazy val immune = (state.agents count (_.health == Immune)) / agents
-      lazy val healthy = (state.agents count (_.health == Healthy)) / agents
+      })
+      val immune = state.agents count (_.health == Immune)
+      val healthy = state.agents count (_.health == Healthy)
 
-      publisher ! Publish(state.day, state.chunk, world, Condition(ill, immune, healthy)) //TODO: fix days flow
+      publisher ! Publish(state.day + (state.chunk match {
+        case Morning => 0
+        case Afternoon => 0.25
+        case Evening => 0.5
+        case Night => 0.75
+      }), state.chunk, world, Condition(ill, immune, healthy))
       implicit val rnd = scala.util.Random
       state = state.step(virus.apply)
 

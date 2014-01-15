@@ -8,7 +8,7 @@ class SimulationStateTest extends FunSuite {
       new Behaviour(new Cell(Home), Night),
       new Behaviour(new Cell(Home), Morning)
     )
-    val people = List(new Person(Adult, beh))
+    val people = Vector(new Person(Adult, beh))
     val world = Map[(Int, Int), Cell]( (0,0)->new Cell(Home) )
     val stepOne = SimulationState(1, Night, people, world)
     val stepTwo = stepOne.step{
