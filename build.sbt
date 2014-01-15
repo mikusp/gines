@@ -17,7 +17,8 @@ libraryDependencies ++= Seq(
   "com.cloudphysics" % "jerkson_2.10" % "0.6.3",
   "org.scalatest" % "scalatest_2.10" % "2.0",
   "org.scalacheck" %% "scalacheck" % "1.11.1",
-  "org.scalamock" %% "scalamock-scalatest-support" % "3.0.1" % "test"
+  "org.scalamock" %% "scalamock-scalatest-support" % "3.0.1" % "test",
+  "com.google.guava" % "guava" % "12.0"
 )
 
 addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.5.2")

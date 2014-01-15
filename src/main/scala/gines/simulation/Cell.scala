@@ -1,14 +1,7 @@
 package gines.simulation
 
-import java.util.UUID
-
-class Cell(t: CellType, private val uuid: UUID) {
+class Cell(t: CellType) {
   val typ = t
-
-  def this(t: CellType) = this(t, UUID.randomUUID)
-
-  override def equals(obj: Any) = this.uuid == obj.asInstanceOf[Cell].uuid
-  override def hashCode() = uuid.hashCode()
 }
 
 sealed abstract class CellType {
