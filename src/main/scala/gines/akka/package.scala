@@ -18,5 +18,5 @@ package object akka {
 
   case class Condition(infected: Double, immune: Double, healthy: Double)
 
-  case class Publish(day: Int, time: TimeChunk, world: Map[(Int,Int), Cell], condition: Condition)
+  case class Publish(day: Double, time: TimeChunk, world: Map[(Int,Int), Cell], condition: Condition)
 }

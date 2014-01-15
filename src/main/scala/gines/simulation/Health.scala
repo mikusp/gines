@@ -1,9 +1,15 @@
 package gines.simulation
 
+import com.typesafe.config.ConfigFactory
+
 sealed abstract class Health {
   def advance: Health = this match {
-    case Ill(i) if i < 40 => Ill(i+1)
-    case Ill(i) => Immune
+    case Ill(i) =>
+      lazy val conf = ConfigFactory.load
+      lazy val illnessLengthInNumOfChunks = conf.getInt("simulation.params." +
+        "illness.length") * 4
+
+      if (i < illnessLengthInNumOfChunks) Ill(i+1) else Immune
 
     case h => h
   }
