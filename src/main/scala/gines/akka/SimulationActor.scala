@@ -22,7 +22,6 @@ class SimulationActor(var state: SimulationState, val virus: Virus, val publishe
       self ! Infect //TODO: start with initial parameters
     }
     case PauseSimulation => ???
-    case StopSimulation => ???
 
     //TODO: add more steps to have more control
     case Infect => {
