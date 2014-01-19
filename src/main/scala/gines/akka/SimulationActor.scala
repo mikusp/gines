@@ -1,11 +1,46 @@
 package gines.akka
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{ConfigException, Config, ConfigFactory}
 import akka.actor.{ActorLogging, ActorRef, Actor}
 import gines.simulation._
 import gines.simulation.SimulationState
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+
+
+private object Implicits {
+  import scala.util.Random
+  implicit class RichPopulation(val pop: Vector[Person]) {
+
+    lazy val (healthy, notHealthy) = Random.shuffle(pop).partition(_.health == Healthy)
+    lazy val illAgentsNum = conf.getInt("simulation.params.agents.initialInfected")
+    lazy val immuneAgentsNum = try conf.getInt("simulation.params.agents.initialImmune")
+    catch {case e: ConfigException.Missing => 0}
+    lazy val immuneAgentsAge = try conf.getString("simulation.params.agents.immuneAge")
+    catch {case e: ConfigException.Missing => "All"}
+
+    def immune: Vector[Person] = {
+      def stringToAge(s: String): Age = s match {
+        case "Child" => Child
+        case "Teenager" => Teenager
+        case "Adult" => Adult
+        case "Elderly" => Elderly
+      }
+
+      val (toImmune, notInAge) = immuneAgentsAge match {
+        case "All" => (healthy, Vector())
+        case _ => healthy partition (_.age == stringToAge(immuneAgentsAge))
+      }
+      val (n, rest) = toImmune.splitAt(immuneAgentsNum)
+      notHealthy ++ notInAge ++ (n map (_.copy(health = Immune))) ++ rest
+    }
+
+    def infect: Vector[Person] = {
+      val (toInfect, rest) = healthy.splitAt(illAgentsNum)
+      notHealthy ++ (toInfect map (_.copy(health = Ill(1)))) ++ rest
+    }
+  }
+}
 
 class SimulationActor(var state: SimulationState, val virus: Virus, val publisher: ActorRef) extends Actor with ActorLogging {
   private var started = 0L
@@ -16,9 +51,8 @@ class SimulationActor(var state: SimulationState, val virus: Virus, val publishe
   def receive = {
     case StartSimulation() => {
       log.debug("Starting")
-      val illAgentsNum = conf.getInt("simulation.params.agents.initialInfected")
-      val newAgents = state.agents.take(illAgentsNum).map(_.copy(health = Ill(1)))
-      state = state.copy(agents = newAgents ++ state.agents.drop(illAgentsNum))
+      import Implicits.RichPopulation
+      state = state.copy(agents = state.agents.immune.infect)
       self ! Infect //TODO: start with initial parameters
     }
     case PauseSimulation => ???
@@ -46,7 +80,11 @@ class SimulationActor(var state: SimulationState, val virus: Virus, val publishe
         case _ => false
       })
       val immune = state.agents count (_.health == Immune)
-      val healthy = state.agents count (_.health == Healthy)
+      val healthy = state.agents count (_.health match {
+        case Healthy => true
+        case Exposed(_) => true
+        case _ => false
+      })
 
       publisher ! Publish(state.day + (state.chunk match {
         case Morning => 0

@@ -18,12 +18,12 @@ case class SimulationState(
       case _ => false
     })
 
-    val (healthy, immune) = rest partition (_.health match {
+    val (healthy, immuneAndExposed) = rest partition (_.health match {
       case Healthy => true
       case _ => false
     })
 
-    assert(ill.length + healthy.length + immune.length == numberOfAgents)
+    assert(ill.length + healthy.length + immuneAndExposed.length == numberOfAgents)
 
     def worldAdjacent(w: Map[Cell, (Int, Int)], c1: Cell, c2: Cell): Boolean = {
       if (c1.typ != c2.typ)
@@ -51,7 +51,7 @@ case class SimulationState(
     val potentiallyInfectedPeople = healthyInAdjacent.elementSet.asScala.map((e) =>
       iterate(healthyInAdjacent.count(e), f, e))
 
-    val allPeople = (potentiallyInfectedPeople.toVector ++ restOfHealthyPeople ++ ill ++ immune) map (_.nextPhase)
+    val allPeople = (potentiallyInfectedPeople.toVector ++ restOfHealthyPeople ++ ill ++ immuneAndExposed) map (_.nextPhase)
     val nextChunk = chunk match {
       case Morning => Afternoon
       case Afternoon => Evening
@@ -72,7 +72,7 @@ object RandomWorldGenerator extends WorldGenerator {
 
     for (i <- 1 to x) {
       for (j <- 1 to y) {
-        // TODO
+        // TODO                   i
         // get all subclasses of CellType from the compiler
         val t = List(School, Work, Home).randomElem
 
