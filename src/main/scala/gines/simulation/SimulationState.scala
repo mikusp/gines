@@ -52,12 +52,7 @@ case class SimulationState(
       iterate(healthyInAdjacent.count(e), f, e))
 
     val allPeople = (potentiallyInfectedPeople.toVector ++ restOfHealthyPeople ++ ill ++ immuneAndExposed) map (_.nextPhase)
-    val nextChunk = chunk match {
-      case Morning => Afternoon
-      case Afternoon => Evening
-      case Evening => Night
-      case Night => Morning
-    }
+    val nextChunk = chunk.next
 
     assert(allPeople.length == numberOfAgents, "We are messing with agents!!!")
 

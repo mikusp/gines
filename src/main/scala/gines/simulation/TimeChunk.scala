@@ -2,6 +2,13 @@ package gines.simulation
 
 sealed abstract class TimeChunk {
   val name: String
+
+  def next: TimeChunk = this match {
+    case Morning => Afternoon
+    case Afternoon => Evening
+    case Evening => Night
+    case Night => Morning
+  }
 }
 
 case object Morning extends TimeChunk {
