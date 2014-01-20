@@ -1,12 +1,12 @@
 package gines.simulation
 
 class Person(val age: Age, val routine: Stream[Behaviour],
-  override val health: Health = Healthy, override val
+  val health: Health = Healthy, val
   virusEncounters: Int = 0) extends Agent {
   def nextPhase: Person = new Person(age, routine.tail, health.advance, virusEncounters)
 
-  def copy(age: Age = this.age, routine: Stream[Behaviour] = this.routine,
-    health: Health = this.health, virusEncounters: Int = this.virusEncounters) =
+  def copy(age: Age = age, routine: Stream[Behaviour] = routine,
+    health: Health = health, virusEncounters: Int = virusEncounters) =
       new Person(age, routine, health, virusEncounters)
 }
 
@@ -21,15 +21,9 @@ case object Adult extends Age
 case object Elderly extends Age
 
 trait Agent {
-  val health: Health = Healthy
-  val virusEncounters: Int = 0
+  val health: Health
+  val virusEncounters: Int
 }
-
-sealed abstract class Sex
-
-case object Male extends Sex
-
-case object Female extends Sex
 
 object Foo {
   import org.scalacheck.Gen
