@@ -4,6 +4,8 @@ import RoutineGenerator.RandomList
 import com.google.common.collect.{HashMultiset}
 import scala.collection.{mutable, immutable}
 import scala.collection.JavaConverters._
+import scala.util.Random
+import com.typesafe.config.ConfigFactory
 
 case class SimulationState(
   day: Int,
@@ -38,9 +40,10 @@ case class SimulationState(
     val outsideWorld = world.map(_.swap)
 
     val healthyInAdjacent: HashMultiset[Person] = HashMultiset.create()
-    ill foreach (i => healthy foreach (j =>
-      if (worldAdjacent(outsideWorld, i.routine.head.cell, j.routine.head.cell))
-        healthyInAdjacent.add(j)))
+    lazy val spread = ConfigFactory.load.getInt("simulation.params.virus.spreadFactor")
+    ill foreach (i => Random.shuffle(healthy.filter(j =>
+      worldAdjacent(outsideWorld, i.routine.head.cell, j.routine.head.cell))).take(spread)
+        foreach (k => healthyInAdjacent.add(k)))
 
     def iterate[A](n: Int, f: A => A, e: A): A = n match {
       case 0 => e
