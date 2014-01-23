@@ -56,11 +56,11 @@ object Foo {
   }
 
   def populateWorld(world: Map[(Int, Int), Cell]): Vector[Person] =
-    world.filter{ case (_, c) => c.typ == Home }.foldLeft(Vector[Person]())((list, home) => home match {
-      case (_, c) => {
+    world.values.filter(_.typ == Home).foldLeft(Vector[Person]()) {
+      case (list, cell) => {
         val size = householdSizeGen.sample.get
 
-        val routineF = (a: Age) => RoutineGenerator(a, c, world)
+        val routineF = (a: Age) => RoutineGenerator(a, cell, world)
         val firstPersonAge = singleAgeGen.sample.get
 
         val newPeople = new Person(firstPersonAge, routineF(firstPersonAge)) +:
@@ -70,5 +70,5 @@ object Foo {
 
         newPeople ++ list
       }
-    })
+    }
 }

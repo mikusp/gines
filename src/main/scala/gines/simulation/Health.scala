@@ -13,7 +13,7 @@ sealed abstract class Health {
 
     case Exposed(i) =>
       lazy val conf = ConfigFactory.load
-      lazy val exposedPhaseLength = conf.getInt("simulation.params" +
+      lazy val exposedPhaseLength = conf.getInt("simulation.params." +
         "exposed.length") * 4
 
       if (i < exposedPhaseLength) Exposed(i+1) else Ill(1)
