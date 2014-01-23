@@ -9,6 +9,10 @@ import scala.util.Success
 import scala.util.Failure
 import scala.Some
 import akka.zeromq.Bind
+import com.codahale.jerkson.Json
+import com.fasterxml.jackson.annotation.{JsonInclude, JsonTypeInfo, JsonSubTypes}
+import com.fasterxml.jackson.annotation.JsonInclude.Include
+import gines.App
 
 class AdminActor extends Actor with ActorLogging {
   val adminSocket = ZeroMQExtension(system).newSocket(SocketType.Rep, Listener(self), Bind(s"tcp://*:$adminPort"))
@@ -17,30 +21,25 @@ class AdminActor extends Actor with ActorLogging {
     case Connecting => log.debug("Connecting")
     case m: ZMQMessage => {
       sender ! ZMQMessage(ByteString("gines"), ByteString("{\"status:\": \"OK\"}"))
-      log.debug("Received message")
-      log.debug(s"Message: ${m.frame(1).utf8String}")
-      processMessage(m.frame(1).utf8String, if(m.frames.length < 3) None else Some(m.frame(2).utf8String))
+      log.debug(s"Received message: ${m.frame(1).utf8String}")
+      val obj = Json.parse[Command](m.frame(1).utf8String.toString)
+      processMessage(obj)
     }
     case Closed => log.debug("Disconnected")
     case _ => log.warning("Other message")
   }
 
-  def processMessage(cmd: String, payload: Option[String]): Unit = cmd match {
-    case "start" => payload.map { p =>
-      simulationControl(
-        onSuccess = { actor =>
-          log.warning("Simulation is already running")
-        },
-        onFailure = {
-          log.info("Creating simulation")
-        }
-      )
-    } getOrElse {
-      log.debug("Error! There is lack of parameters")
-    }
-    case "pause" => log.warning("Pause command is not supported")
-    case "resume" => log.warning("Resume command is not supported")
-    case "stop" => {
+  def processMessage(cmd: Command): Unit = cmd match {
+    case c: StartCommand => simulationControl(
+      onSuccess = { actor =>
+        log.debug("Simulation is already running")
+      },
+      onFailure = {
+        log.info("Creating simulation")
+        App.createSimulation
+      }
+    )
+    case c: StopCommand => {
       simulationControl(onSuccess = { actor =>
         log.info("Stoping simulation")
         actor ! PoisonPill
@@ -48,11 +47,7 @@ class AdminActor extends Actor with ActorLogging {
         log.warning("Cannot stop not running simulation")
       })
     }
-    case "restart" => {
-      log.info("Restarting simulation")
-      processMessage("stop", None)
-      processMessage("start", payload)
-    }
+    case _ => log.warning("Mismatch message")
   }
 
   private def simulationControl(onSuccess: (ActorRef) => Unit = {actor => ()}, onFailure: => Unit = {}): Unit = {
@@ -64,6 +59,21 @@ class AdminActor extends Actor with ActorLogging {
     }
   }
 }
+
+@JsonTypeInfo(
+  use = JsonTypeInfo.Id.NAME,
+  include = JsonTypeInfo.As.PROPERTY,
+  property = "command"
+)
+@JsonSubTypes(
+  Array(
+    new JsonSubTypes.Type(value=classOf[StartCommand], name="start"),
+    new JsonSubTypes.Type(value=classOf[StopCommand], name="stop")
+  )
+)
+abstract class Command
+case class StartCommand(params: Option[String]) extends Command
+case class StopCommand(foo: Option[String]) extends Command
 
 object AdminActor {
   def apply(port: Int) =

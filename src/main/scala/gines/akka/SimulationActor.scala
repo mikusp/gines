@@ -44,18 +44,18 @@ private object Implicits {
 
 class SimulationActor(var state: SimulationState, val virus: Virus, val publisher: ActorRef) extends Actor with ActorLogging {
   private var started = 0L
+  private var paused = false
   private val sleepDuration = 1000
 
   lazy val conf = ConfigFactory.load
 
   def receive = {
-    case StartSimulation() => {
+    case StartSimulation => {
       log.debug("Starting")
       import Implicits.RichPopulation
       state = state.copy(agents = state.agents.immune.infect)
       self ! Infect //TODO: start with initial parameters
     }
-    case PauseSimulation => ???
 
     //TODO: add more steps to have more control
     case Infect => {
@@ -105,6 +105,5 @@ class SimulationActor(var state: SimulationState, val virus: Virus, val publishe
 case object Infect
 case object NextDay
 
-case class StartSimulation()
+case object StartSimulation
 case object StopSimulation
-case object PauseSimulation
