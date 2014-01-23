@@ -31,7 +31,7 @@ case class SimulationState(
       else {
         val (x1, y1) = w(c1)
         val (x2, y2) = w(c2)
-        (x1 == x2 && math.abs(y1 - y2) == 1) || (math.abs(x1 - x2) == 1 && y1 == y2)
+        (x1 == x2 && y1 == y2) || (x1 == x2 && math.abs(y1 - y2) == 1) || (math.abs(x1 - x2) == 1 && y1 == y2)
       }
     }
 
