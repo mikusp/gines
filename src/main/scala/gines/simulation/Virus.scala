@@ -10,7 +10,7 @@ case class Virus(infectivity: Double, probCurveFactor: Int) {
       val virusEnc = prs.virusEncounters + 1
       val infectionProb = infectivity * math.exp(virusEnc / probCurveFactor)
 
-      val h = if (math.random < infectionProb) Ill(1) else Healthy
+      val h = if (math.random < infectionProb) Exposed(1) else Healthy
 
       prs.copy(health = h, virusEncounters = virusEnc)
     }
