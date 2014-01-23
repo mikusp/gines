@@ -3,7 +3,30 @@ package gines.simulation
 class Person(val age: Age, val routine: Stream[Behaviour],
   val health: Health = Healthy, val
   virusEncounters: Int = 0) extends Agent {
-  def nextPhase: Person = new Person(age, routine.tail, health.advance, virusEncounters)
+
+  def nextPhase: Person = {
+    def home(s: Stream[Behaviour]): Cell = s.head.tc match {
+      case Night | Evening => s.head.cell
+      case _ => home(s.tail)
+    }
+
+    def swapForHome(s: Stream[Behaviour]) = {
+      val h = home(s)
+
+      if (s.head.cell.typ != Home)
+        s.head.copy(cell = h) #:: s.tail
+      else
+        s
+    }
+
+    def chooseNextObjective(s: Stream[Behaviour]) = health match {
+      case Ill(_) => swapForHome(s.tail)
+      case _ => s.tail
+    }
+
+
+    new Person(age, chooseNextObjective(routine), health.advance, virusEncounters)
+  }
 
   def copy(age: Age = age, routine: Stream[Behaviour] = routine,
     health: Health = health, virusEncounters: Int = virusEncounters) =
