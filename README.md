@@ -1,14 +1,18 @@
-Gines
-=====
+# Gines
 
-Gines is not epidemic simulation
+## Gines is not epidemic simulation
 
+#### Zależności:
+* Scala >= 2.10
+* sbt >= 0.13.*
+* ZeroMQ == 2.*
+* reszta zależności zostanie ściągnięta przez sbt w czasie kompilacji.
 
 Program składa się z dwóch części: serwera i GUI.
 
 GUI uruchamia się wywołując polecenia:
-    - sbt będąc w folderze gines-gui,
-    - run, w sbt.
+* sbt będąc w folderze gines-gui,
+* run, w sbt.
 
 Po uruchomieniu, dostępna jest strona internetowa pod adresem
 127.0.0.1:9000 przedstawiająca symulację.
