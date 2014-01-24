@@ -6,22 +6,30 @@ import com.typesafe.config.ConfigFactory
 import gines.akka.{AdminActor, StartSimulation, GinesActors}
 import gines.simulation.{Virus, Morning, SimulationState, Foo}
 import gines.utils.GinesLogging
+import java.io.File
 
 object App extends GinesLogging {
   def main(args: Array[String]): Unit = {
-    GinesActors.system.actorOf(Props[AdminActor], name="admin")
 
-    if(args.length > 0 && args(0).toLowerCase != "gui") {
-      createSimulation
+    val conf = if(args.length > 0) {
+      Some(args(0))
+    } else {
+      None
     }
+
+    GinesActors.system.actorOf(Props(classOf[AdminActor], conf), name="admin")
 
     GinesActors.system.awaitTermination()
   }
 
-  def createSimulation: Unit = {
+  def createSimulation(config: Option[String]): Unit = {
     import GinesActors.publisher
 
-    val conf = ConfigFactory.load
+    val conf = config map { file =>
+      ConfigFactory.parseFile(new File(file))
+    } getOrElse {
+      ConfigFactory.load
+    }
 
     val world = Foo.genWorld(conf.getInt("simulation.params.world.width"), conf.
       getInt("simulation.params.world.height"))

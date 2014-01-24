@@ -1,8 +1,23 @@
+import AssemblyKeys._
+
 organization := "gines"
 
 name := "gines"
 
 version := "0.1-SNAPSHOT"
+
+assemblySettings
+
+mainClass in assembly := Some("gines.App")
+
+lazy val buildSettings = Seq(
+  version := "0.1-SNAPSHOT",
+  scalaVersion := "2.10.1"
+)
+
+val app = (project in file("app")).
+  settings(buildSettings: _*).
+  settings(assemblySettings: _*)
 
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.0.4",

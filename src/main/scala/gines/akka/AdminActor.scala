@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.{JsonInclude, JsonTypeInfo, JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import gines.App
 
-class AdminActor extends Actor with ActorLogging {
+class AdminActor(confFile: Option[String]) extends Actor with ActorLogging {
   val adminSocket = ZeroMQExtension(system).newSocket(SocketType.Rep, Listener(self), Bind(s"tcp://*:$adminPort"))
 
   def receive: Actor.Receive = {
@@ -36,7 +36,7 @@ class AdminActor extends Actor with ActorLogging {
       },
       onFailure = {
         log.info("Creating simulation")
-        App.createSimulation
+        App.createSimulation(confFile)
       }
     )
     case c: StopCommand => {
