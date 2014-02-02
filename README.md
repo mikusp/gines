@@ -20,9 +20,11 @@ Po uruchomieniu, dostępna jest strona internetowa pod adresem
 Aby GUI działało, należy uruchomić serwer symulacji znajdujący się w
 pliku .jar - poleceniem
 
-    java -jar gines.jar konfig.conf
+    java -jar gines.jar application.conf
 
-Konfig.conf to plik zawierający opcje konfiguracyjne symulacji.
+Application.conf to plik zawierający opcje konfiguracyjne symulacji - wzór
+znajduje się w folderze src/main/resources. Jeśli nie zostanie podany,
+zostanie wczytana konfiguracja zawarta w pliku .jar.
 
 
 Z działającym serwerem symulacji strona jest w pełni funkcjonalna
