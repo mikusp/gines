@@ -79,8 +79,8 @@ object Foo {
   }
 
   def populateWorld(world: Map[(Int, Int), Cell]): Vector[Person] =
-    world.values.filter(_.typ == Home).foldLeft(Vector[Person]()) {
-      case (list, cell) => {
+    world.values.filter(c => c.typ == Home || c.typ == FakeHome).foldLeft(Vector[Person]()) {
+      case (list, cell) =>
         val size = householdSizeGen.sample.get
 
         val routineF = (a: Age) => RoutineGenerator(a, cell, world)
@@ -92,6 +92,5 @@ object Foo {
         }).to[Vector]
 
         newPeople ++ list
-      }
     }
 }

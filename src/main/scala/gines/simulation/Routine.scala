@@ -28,6 +28,7 @@ object RoutineGenerator {
 
     val celltypeToRandomCell = cells.groupBy(_.typ).map {
       case (Home, _) => (Home, home)
+      case (FakeHome, _) => (FakeHome, home)
       case (t, cs) => (t, cs.randomElem)
     }
 
